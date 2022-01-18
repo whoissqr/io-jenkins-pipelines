@@ -37,15 +37,24 @@ pipeline {
         stage('SAST - SpotBugs') {
             steps {
                 echo 'Running SAST using SpotBugs'
-                sh "curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/spotbugs/spotbugs-adapter.json --output spotbugs-adapter.json"
-                sh "curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/spotbugs/spotbugs.sh --output spotbugs.sh"
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/spotbugs/spotbugs-adapter.json --output spotbugs-adapter.json'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/spotbugs/spotbugs.sh --output spotbugs.sh'
                 synopsysIO() {
                     sh 'io --stage execution --adapters spotbugs-adapter.json --state io_state.json'
                 }
             }
         }
 
-
+        stage('SCA - DependencyCheck') {
+            steps {
+                echo 'Running SCA using DependencyCheck'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/dependency-check/dependency-check-adapter.json --output dependency-check-adapter.json'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/dependency-check/dependency-check.sh --output dependency-check.sh'
+                synopsysIO() {
+                    sh 'io --stage execution --adapters dependency-check-adapter.json --state io_state.json'
+                }
+            }
+        }
 
         stage('IO - Workflow') {
             steps {
