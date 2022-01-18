@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        nodejs 'NodeJS'
+        go 'Go'
     }
     stages {
         stage('Checkout Source Code') {
