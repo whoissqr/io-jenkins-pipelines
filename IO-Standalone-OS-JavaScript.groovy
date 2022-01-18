@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        maven 'NodeJS'
+        nodejs 'NodeJS'
     }
     stages {
         stage('Checkout Source Code') {
