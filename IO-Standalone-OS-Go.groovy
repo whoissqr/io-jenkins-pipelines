@@ -40,7 +40,7 @@ pipeline {
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/gosec/gosec-adapter.json --output gosec-adapter.json'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/gosec/gosec.sh --output gosec.sh'
                 synopsysIO() {
-                    sh 'io --stage execution --adapters gosec-adapter.json --state io_state.json'
+                    sh 'io --stage execution --adapters gosec-adapter.json --state io_state.json || true'
                 }
             }
         }
