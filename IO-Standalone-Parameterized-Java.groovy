@@ -140,8 +140,10 @@ pipeline {
     post {
         always {
             // Archive Results & Logs
-            if (fileExists('**/*-results*.json')) {
-                archiveArtifacts artifacts: '**/*-results*.json', allowEmptyArchive: 'true'
+            script {
+                if (fileExists('**/*-results*.json')) {
+                    archiveArtifacts artifacts: '**/*-results*.json', allowEmptyArchive: 'true'
+                }
             }
 
             archiveArtifacts artifacts: '.io/**', allowEmptyArchive: 'true'
