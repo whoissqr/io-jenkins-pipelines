@@ -48,8 +48,12 @@ pipeline {
 
         stage('SCA - NPM Audit') {
             steps {
-                echo 'Running SCA using NPM Audit'
-                sh 'npm audit > npm-audit.log || true'
+                echo 'Running NPM Audit'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/npm-audit/npm-audit-adapter.json --output npm-audit-adapter.json'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/npm-audit/npm-audit.sh --output npm-audit.sh'
+                synopsysIO() {
+                    sh 'io --stage execution --adapters npm-audit-adapter.json --state io_state.json'
+                }
             }
         }
 
