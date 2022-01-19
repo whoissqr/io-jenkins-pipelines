@@ -1,5 +1,4 @@
 #! /bin/groovy
-
 package com.synopsys.pipeline
 
 import com.synopsys.util.BuildUtil
@@ -13,7 +12,6 @@ def execute() {
     def isSCAEnabled = false
 
     node('master') {
-
         stage('Checkout Code') {
             git branch: 'devsecops', url: 'https://github.com/devsecops-test/vulnado'
         }
@@ -56,39 +54,35 @@ def execute() {
         }
 
         stage('SAST- RapidScan') {
-            when {
-                expression { isSASTEnabled }
-            }
-            echo 'Running SAST using Sigma - Rapid Scan'
-            synopsysIO(connectors: [
-                rapidScan(configName: 'Sigma')]) {
-                sh 'io --stage execution --state io_state.json'
+            if (isSASTEnabled) {
+                echo 'Running SAST using Sigma - Rapid Scan'
+                synopsysIO(connectors: [rapidScan(configName: 'Sigma')]) {
+                    sh 'io --stage execution --state io_state.json'
+                }
             }
         }
 
         stage('SAST - Polaris') {
-            when {
-                expression { isSASTEnabled }
-            }
-            echo 'Running SAST using Polaris'
-            synopsysIO(connectors: [
-                [$class: 'PolarisPipelineConfig',
-                configName: 'csprod-polaris',
-                projectName: 'sig-devsecops/vulnado']]) {
-                sh 'io --stage execution --state io_state.json'
+            if (isSASTEnabled) {
+                echo 'Running SAST using Polaris'
+                synopsysIO(connectors: [
+                    [$class: 'PolarisPipelineConfig',
+                    configName: 'csprod-polaris',
+                    projectName: 'sig-devsecops/vulnado']]) {
+                    sh 'io --stage execution --state io_state.json'
+                    }
             }
         }
 
         stage('SCA - Black Duck') {
-            when {
-                expression { isSCAEnabled }
-            }
-            echo 'Running SCA using Black Duck'
-            synopsysIO(connectors: [
-                blackduck(configName: 'BIZDevBD',
-                projectName: 'vulnado',
-                projectVersion: '1.0')]) {
-                sh 'io --stage execution --state io_state.json'
+            if (isSCAEnabled) {
+                echo 'Running SCA using Black Duck'
+                synopsysIO(connectors: [
+                    blackduck(configName: 'BIZDevBD',
+                    projectName: 'vulnado',
+                    projectVersion: '1.0')]) {
+                    sh 'io --stage execution --state io_state.json'
+                    }
             }
         }
 
