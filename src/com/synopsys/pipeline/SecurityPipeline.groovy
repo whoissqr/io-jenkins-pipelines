@@ -89,7 +89,6 @@ def execute() {
         stage('IO - Archive') {
             // Archive Results & Logs
             archiveArtifacts artifacts: '**/*-results*.json', allowEmptyArchive: 'true'
-            archiveArtifacts artifacts: '.io/**', allowEmptyArchive: 'true'
             archiveArtifacts artifacts: 'mvn-install.log', allowEmptyArchive: 'true'
 
             // Remove the state json file as it has sensitive information
