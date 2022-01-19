@@ -18,7 +18,7 @@ Entry point/script for pipeline code execution: `src\com\synopsys\pipeline\Secur
 
 This can be invoked by: `new pipeline.SecurityPipeline().execute()`.
 
-Tools configured under Jenkins's Global Tool Configuration (such as Maven or Node JS installations) cannot directly be set in the shared library the same way as they are set on standard pipeline code. Refer to `src\com\synopsys\util\BuildUtil.groovy` that defines `"${steps.tool '<tool>'}/bin/<tool> ${args}"` under a helper method to run the build using globally configured tools.
+Tools configured under Jenkins's Global Tool Configuration (such as Maven or Node JS installations) cannot directly be set in the shared library the same way as they are set on standard pipeline code. Refer to `src\com\synopsys\util\BuildUtil.groovy` that defines `"${steps.tool '<tool>'}/bin/<tool> ${args}"` under a helper method to run the build using globally configured tools ([doc](https://www.jenkins.io/doc/book/pipeline/shared-libraries/#accessing-steps)).
 
 ## Setup/Usage
 
