@@ -45,9 +45,9 @@ pipeline {
             }
         }
 
-        stage('SCA - DependencyCheck') {
+        stage('SCA - Dependency-Check') {
             steps {
-                echo 'Running SCA using DependencyCheck'
+                echo 'Running SCA using Dependency-Check'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/dependency-check/dependency-check-adapter.json --output dependency-check-adapter.json'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/dependency-check/dependency-check.sh --output dependency-check.sh'
                 synopsysIO() {
@@ -69,7 +69,6 @@ pipeline {
     post {
         always {
             // Archive Results & Logs
-            archiveArtifacts artifacts: '.io/**', allowEmptyArchive: 'true'
             archiveArtifacts artifacts: 'spotbugs-report.html', allowEmptyArchive: 'true'
             archiveArtifacts artifacts: 'dependency-check-report.html', allowEmptyArchive: 'true'
 

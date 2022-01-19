@@ -86,7 +86,6 @@ pipeline {
         always {
             // Archive Results & Logs
             archiveArtifacts artifacts: '**/*-results*.json', allowEmptyArchive: 'true'
-            archiveArtifacts artifacts: '.io/**', allowEmptyArchive: 'true'
 
             // Remove the state json file as it has sensitive information
             sh 'rm io_state.json'

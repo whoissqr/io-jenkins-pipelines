@@ -70,7 +70,6 @@ pipeline {
     post {
         always {
             // Archive Results & Logs
-            archiveArtifacts artifacts: '.io/**', allowEmptyArchive: 'true'
             archiveArtifacts artifacts: 'npm-install.log', allowEmptyArchive: 'true'
             archiveArtifacts artifacts: 'npm-audit.log', allowEmptyArchive: 'true'
             archiveArtifacts artifacts: 'npm-eslint.log', allowEmptyArchive: 'true'
