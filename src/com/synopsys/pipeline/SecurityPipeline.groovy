@@ -50,16 +50,10 @@ def execute() {
         }
 
         stage('SAST- RapidScan') {
-            environment {
-                OSTYPE = 'linux-gnu'
-            }
-            steps {
-                echo 'Running SAST using Sigma - Rapid Scan'
-                echo env.OSTYPE
-                synopsysIO(connectors: [
-                    rapidScan(configName: 'Sigma')]) {
-                    sh 'io --stage execution --state io_state.json'
-                }
+            echo 'Running SAST using Sigma - Rapid Scan'
+            synopsysIO(connectors: [
+                rapidScan(configName: 'Sigma')]) {
+                sh 'io --stage execution --state io_state.json'
             }
         }
 
