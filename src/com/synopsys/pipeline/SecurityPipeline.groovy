@@ -9,6 +9,9 @@ import com.synopsys.util.BuildUtil
  * It defines pipeline stages and manages overall control flow in the pipeline.
  */
 def execute() {
+    def isSASTEnabled = false
+    def isSCAEnabled = false
+
     node('master') {
 
         stage('Checkout Code') {
@@ -47,9 +50,15 @@ def execute() {
             print("AccessScore: $prescriptionJSON.Data.Prescription.RiskScore.AccessScore")
             print("ToolingScore: $prescriptionJSON.Data.Prescription.RiskScore.ToolingScore")
             print("TrainingScore: $prescriptionJSON.Data.Prescription.RiskScore.TrainingScore")
+
+            isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
+            isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
         }
 
         stage('SAST- RapidScan') {
+            when {
+                expression { isSASTEnabled }
+            }
             echo 'Running SAST using Sigma - Rapid Scan'
             synopsysIO(connectors: [
                 rapidScan(configName: 'Sigma')]) {
@@ -58,6 +67,9 @@ def execute() {
         }
 
         stage('SAST - Polaris') {
+            when {
+                expression { isSASTEnabled }
+            }
             echo 'Running SAST using Polaris'
             synopsysIO(connectors: [
                 [$class: 'PolarisPipelineConfig',
@@ -68,6 +80,9 @@ def execute() {
         }
 
         stage('SCA - Black Duck') {
+            when {
+                expression { isSCAEnabled }
+            }
             echo 'Running SCA using Black Duck'
             synopsysIO(connectors: [
                 blackduck(configName: 'BIZDevBD',
