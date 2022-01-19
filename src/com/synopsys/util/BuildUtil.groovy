@@ -1,5 +1,9 @@
 package com.synopsys.util
 
+/**
+ * A utility class to store build execution methods.
+ * This replaces the "tools { maven: 'Maven3' }"" section of a standard pipeline script.
+ */
 class BuildUtil implements Serializable {
 
   def steps
