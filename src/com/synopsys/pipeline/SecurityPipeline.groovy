@@ -51,19 +51,17 @@ def execute() {
 
             isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
             isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
-
-            isSASTEnabled = false
         }
 
-        if (isSASTEnabled) {
-            stage('SAST - RapidScan') {
+        stage('SAST - Sigma - RapidScan') {
+            if (isSASTEnabled) {
                 echo 'Running SAST using Sigma - Rapid Scan'
                 synopsysIO(connectors: [rapidScan(configName: 'Sigma')]) {
                     sh 'io --stage execution --state io_state.json'
                 }
+            } else {
+                echo 'SAST not enabled, skipping Sigma - RapidScan'
             }
-        } else {
-            echo 'SAST not enabled, skipping RapidScan'
         }
 
         stage('SAST - Polaris') {
@@ -75,18 +73,22 @@ def execute() {
                     projectName: 'sig-devsecops/vulnado']]) {
                     sh 'io --stage execution --state io_state.json'
                     }
+            } else {
+                echo 'SAST not enabled, skipping Polaris'
             }
         }
 
-        stage('SCA - Black Duck') {
+        stage('SCA - BlackDuck') {
             if (isSCAEnabled) {
-                echo 'Running SCA using Black Duck'
+                echo 'Running SCA using BlackDuck'
                 synopsysIO(connectors: [
                     blackduck(configName: 'BIZDevBD',
                     projectName: 'vulnado',
                     projectVersion: '1.0')]) {
                     sh 'io --stage execution --state io_state.json'
                     }
+            } else {
+                echo 'SCA not enabled, skipping BlackDuck'
             }
         }
 
