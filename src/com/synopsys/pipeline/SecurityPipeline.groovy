@@ -2,6 +2,8 @@
 
 package com.synopsys.pipeline
 
+import com.synopsys.util.BuildUtil
+
 /**
  * This script is the entry point for the shared library pipeline.
  * It defines pipeline stages and manages overall control flow in the pipeline.
@@ -14,7 +16,8 @@ def execute() {
         }
 
         stage('Build Source Code') {
-            sh '''mvn clean compile'''
+            def buildUtil = new BuildUtil(this)
+            buildUtil.mvn 'clean compile > mvn-install.log'
         }
 
         stage('IO - Setup Prescription') {
@@ -93,6 +96,7 @@ def execute() {
             // Archive Results & Logs
             archiveArtifacts artifacts: '**/*-results*.json', allowEmptyArchive: 'true'
             archiveArtifacts artifacts: '.io/**', allowEmptyArchive: 'true'
+            archiveArtifacts artifacts: 'mvn-install.log', allowEmptyArchive: 'true'
 
             // Remove the state json file as it has sensitive information
             sh 'rm io_state.json'
