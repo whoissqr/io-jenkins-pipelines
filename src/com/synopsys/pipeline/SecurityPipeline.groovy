@@ -51,15 +51,19 @@ def execute() {
 
             isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
             isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
+
+            isSASTEnabled = false
         }
 
-        stage('SAST- RapidScan') {
-            if (isSASTEnabled) {
+        if (isSASTEnabled) {
+            stage('SAST - RapidScan') {
                 echo 'Running SAST using Sigma - Rapid Scan'
                 synopsysIO(connectors: [rapidScan(configName: 'Sigma')]) {
                     sh 'io --stage execution --state io_state.json'
                 }
             }
+        } else {
+            echo 'SAST not enabled, skipping RapidScan'
         }
 
         stage('SAST - Polaris') {
