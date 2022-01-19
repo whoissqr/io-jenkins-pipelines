@@ -12,11 +12,11 @@ Shared library code to run Java projects. Security stages & configured tools:
 
 ## Setup/Usage
 
-First, setup Jenkins to read the shared library (Ref: [Jenkins Library Setup](###-jenkins-library-setup)).
+First, setup Jenkins to read the shared library (Ref: [Jenkins Library Setup](#-jenkins-library-setup)).
 
-Next, setup the project to execute the shared library (Ref: [Project Setup](###-project-setup)).
+Next, setup the project to execute the shared library (Ref: [Project Setup](#-project-setup)).
 
-Finally, create a job that runs the project as a pipeline utilizing the above configuration (Ref: [Pipeline Job Setup](###-pipeline-job-setup)).
+Finally, create a job that runs the project as a pipeline utilizing the above configuration (Ref: [Pipeline Job Setup](#-pipeline-job-setup)).
 
 ### Jenkins Library Setup
 
