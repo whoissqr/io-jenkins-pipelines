@@ -1,6 +1,8 @@
 # Synopsys Intelligent Orchestration
 
-## Jenkins Shared Library for Java
+## Overview
+
+### Jenkins Shared Library for Java
 
 Shared library code to run Java projects. Security stages & configured tools:
 
@@ -10,13 +12,21 @@ Shared library code to run Java projects. Security stages & configured tools:
 - SCA:
   - BlackDuck
 
+### Code
+
+Entry point/script for pipeline code execution: `src\com\synopsys\pipeline\SecurityPipeline.groovy` - method: `execute()`.
+
+This can be invoked by: `new pipeline.SecurityPipeline().execute()`.
+
+Tools configured under Jenkins's Global Tool Configuration (such as Maven or Node JS installations) cannot directly be set in the shared library the same way as they are set on standard pipeline code. Refer to `src\com\synopsys\util\BuildUtil.groovy` that defines `"${steps.tool '<tool>'}/bin/<tool> ${args}"` under a helper method to run the build using globally configured tools.
+
 ## Setup/Usage
 
-First, setup Jenkins to read the shared library (Ref: [Jenkins Library Setup](#-jenkins-library-setup)).
+First, setup Jenkins to read the shared library (Ref: [Jenkins Library Setup](#jenkins-library-setup)).
 
-Next, setup the project to execute the shared library (Ref: [Project Setup](#-project-setup)).
+Next, setup the project to execute the shared library (Ref: [Project Setup](#project-setup)).
 
-Finally, create a job that runs the project as a pipeline utilizing the above configuration (Ref: [Pipeline Job Setup](#-pipeline-job-setup)).
+Finally, create a job that runs the project as a pipeline utilizing the above configuration (Ref: [Pipeline Job Setup](#pipeline-job-setup)).
 
 ### Jenkins Library Setup
 
@@ -34,8 +44,11 @@ Finally, create a job that runs the project as a pipeline utilizing the above co
 - Complete Jenkins setup (above).
 - Locate project that should be run as a pipeline using this shared library code.
   - eg: https://github.com/devsecops-test/vulnado
-- On this project, create a new file, 'Jenkinsfile' (no file extension).
-- Add the code below to the Jenkinsfile.
+- On this project, create a new file, `Jenkinsfile` (no file extension).
+- Add the code from the block below to the Jenkinsfile.
+  - Line #1 locates the library saved under Jenkin's global configuration using the `@Library` annotation.
+  - Line #2 imports all code from the shared-library package: `com.synopsys`.
+  - Line #3 triggers the execution of the shared-library code from the `execute()` method.
 ````
 @Library('io-library-java')
 import com.synopsys.*
@@ -45,8 +58,8 @@ new pipeline.SecurityPipeline().execute()
 ### Pipeline Job Setup
 
 - Create a new job on Jenkins (Type: Pipeline)
-- Pipeline Defintion: Pipeline script from SCM
-- Set SCM: Git
+- Pipeline Defintion: 'Pipeline script from SCM'
+- Set SCM: 'Git'
 - Set Repository URL (to the project selected in the step above), eg: 'https://github.com/devsecops-test/vulnado'
 - Set Branch Specifier: '*/devsecops-shared-library'.
 - Ensure 'Script Path' is set to 'Jenkinsfile'.
