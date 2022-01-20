@@ -60,8 +60,6 @@ pipeline {
                     print("SCA Enabled: $isSCAEnabled")
                     print("DAST Enabled: $isDASTEnabled")
                     print("DAST+Manual Enabled: $isDASTPlusMEnabled")
-
-                    isSASTEnabled = false
                 }
             }
         }
@@ -85,7 +83,7 @@ pipeline {
 
         stage('SAST - Polaris') {
             when {
-                expression { params.SAST == 'Polaris' }
+                expression { return isSASTEnabled && params.SAST == 'Polaris' }
             }
             steps {
                 echo 'Running SAST using Polaris'
@@ -100,7 +98,7 @@ pipeline {
 
         stage('SAST - Coverity') {
             when {
-                expression { params.SAST == 'Coverity' }
+                expression { return isSASTEnabled && params.SAST == 'Coverity' }
             }
             steps {
                 echo 'TODO - Coverity implementation'
@@ -109,7 +107,7 @@ pipeline {
 
         stage('SAST - SpotBugs') {
             when {
-                expression { params.SAST == 'SpotBugs' }
+                expression { return isSASTEnabled && params.SAST == 'SpotBugs' }
             }
             steps {
                 echo 'Running SAST using SpotBugs'
@@ -123,7 +121,7 @@ pipeline {
 
         stage('SCA - BlackDuck') {
             when {
-                expression { params.SCA == 'BlackDuck' }
+                expression { return isSCAEnabled && params.SCA == 'BlackDuck' }
             }
             steps {
               echo 'Running SCA using BlackDuck'
@@ -136,9 +134,25 @@ pipeline {
             }
         }
 
+        stage('SAST Plus Manual') {
+            when {
+                expression { isSASTPlusMEnabled }
+            }
+            input {
+                message "Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?"
+                ok "Approve"
+                parameters {
+                    string(name: 'ApprovalComment', defaultValue: 'Approved', description: 'Approval Comment.')
+                }
+            }
+            steps {
+                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
+            }
+        }
+
         stage('SCA - Dependency-Check') {
             when {
-                expression { params.SCA == 'DependencyCheck' }
+                expression { return isSCAEnabled && params.SCA == 'DependencyCheck' }
             }
             steps {
                 echo 'Running SCA using Dependency-Check'
@@ -152,10 +166,26 @@ pipeline {
 
         stage('DAST - OWASP ZAP') {
             when {
-                expression { params.DAST == 'OWASP-ZAP' }
+                expression { return isDASTEnabled && params.DAST == 'OWASP-ZAP' }
             }
             steps {
                 echo 'TODO - OWASP-ZAP implementation'
+            }
+        }
+
+        stage('DAST Plus Manual') {
+            when {
+                expression { isDASTPlusMEnabled }
+            }
+            input {
+                message "Major code change detected, manual threat-modeling (DAST - Manual) triggerd. Proceed?"
+                ok "Approve"
+                parameters {
+                    string(name: 'ApprovalComment', defaultValue: 'Approved', description: 'Approval Comment.')
+                }
+            }
+            steps {
+                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
             }
         }
 
