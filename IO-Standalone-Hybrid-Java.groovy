@@ -1,3 +1,9 @@
+def isSASTEnabled
+def isSASTPlusMEnabled
+def isSCAEnabled
+def isDASTEnabled
+def isDASTPlusMEnabled
+
 pipeline {
     agent any
     tools {
@@ -31,12 +37,36 @@ pipeline {
                     buildBreaker(configName: 'BB-ALL')]) {
                         sh 'io --stage io'
                     }
+
+                script {
+                    def prescriptionJSON = readJSON file: 'io_state.json'
+
+                    print("Business Criticality Score: $prescriptionJSON.Data.Prescription.RiskScore.BusinessCriticalityScore")
+                    print("Data Class Score: $prescriptionJSON.Data.Prescription.RiskScore.DataClassScore")
+                    print("Access Score: $prescriptionJSON.Data.Prescription.RiskScore.AccessScore")
+                    print("Open Vulnerability Score: $prescriptionJSON.Data.Prescription.RiskScore.OpenVulnerabilityScore")
+                    print("Change Significance Score: $prescriptionJSON.Data.Prescription.RiskScore.ChangeSignificanceScore")
+                    print("Tooling Score: $prescriptionJSON.Data.Prescription.RiskScore.ToolingScore")
+                    print("Training Score: $prescriptionJSON.Data.Prescription.RiskScore.TrainingScore")
+
+                    isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
+                    isSASTPlusMEnabled = prescriptionJSON.Data.Prescription.Security.Activities.SastPlusM.Enabled
+                    isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
+                    isDASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Dast.Enabled
+                    isDASTPlusMEnabled = prescriptionJSON.Data.Prescription.Security.Activities.DastPlusM.Enabled
+
+                    print("SAST Enabled: $isSASTEnabled")
+                    print("SAST+Manual Enabled: $isSASTPlusMEnabled")
+                    print("SCA Enabled: $isSCAEnabled")
+                    print("DAST Enabled: $isDASTEnabled")
+                    print("DAST+Manual Enabled: $isDASTPlusMEnabled")
+                }
             }
         }
 
         stage('SAST - RapidScan (Sigma)') {
             when {
-                expression { params.SAST == 'Sigma' }
+                expression { return isSASTEnabled && params.SAST == 'Sigma' }
             }
             environment {
                 OSTYPE = 'linux-gnu'
