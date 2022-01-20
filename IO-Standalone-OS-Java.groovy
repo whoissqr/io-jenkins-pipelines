@@ -1,5 +1,8 @@
 def isSASTEnabled
+def isSASTPlusMEnabled
 def isSCAEnabled
+def isDASTEnabled
+def isDASTPlusMEnabled
 
 pipeline {
     agent any
@@ -41,20 +44,28 @@ pipeline {
             steps {
                 script {
                     def prescriptionJSON = readJSON file: 'io_state.json'
-                    print("Updated Prescription JSON :\n$prescriptionJSON\n")
-                    print("SAST Enabled: $prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled")
-                    print("SCA Enabled: $prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled")
-                    print("BusinessCriticalityScore: $prescriptionJSON.Data.Prescription.RiskScore.BusinessCriticalityScore")
-                    print("DataClassScore: $prescriptionJSON.Data.Prescription.RiskScore.DataClassScore")
-                    print("AccessScore: $prescriptionJSON.Data.Prescription.RiskScore.AccessScore")
-                    print("ToolingScore: $prescriptionJSON.Data.Prescription.RiskScore.ToolingScore")
-                    print("TrainingScore: $prescriptionJSON.Data.Prescription.RiskScore.TrainingScore")
+
+                    print("Business Criticality Score: $prescriptionJSON.Data.Prescription.RiskScore.BusinessCriticalityScore")
+                    print("Data Class Score: $prescriptionJSON.Data.Prescription.RiskScore.DataClassScore")
+                    print("Access Score: $prescriptionJSON.Data.Prescription.RiskScore.AccessScore")
+                    print("Open Vulnerability Score: $prescriptionJSON.Data.Prescription.RiskScore.OpenVulnerabilityScore")
+                    print("Change Significance Score: $prescriptionJSON.Data.Prescription.RiskScore.ChangeSignificanceScore")
+                    print("Tooling Score: $prescriptionJSON.Data.Prescription.RiskScore.ToolingScore")
+                    print("Training Score: $prescriptionJSON.Data.Prescription.RiskScore.TrainingScore")
 
                     isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
+                    isSASTPlusMEnabled = prescriptionJSON.Data.Prescription.Security.Activities.SastPlusM.Enabled
                     isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
+                    isDASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Dast.Enabled
+                    isDASTPlusMEnabled = prescriptionJSON.Data.Prescription.Security.Activities.DastPlusM.Enabled
 
-                    isSASTEnabled = false
-                    isSCAEnabled = false
+                    isSASTEnabled = false;
+
+                    print("SAST Enabled: $isSASTEnabled")
+                    print("SAST+Manual Enabled: $isSASTPlusMEnabled")
+                    print("SCA Enabled: $isSCAEnabled")
+                    print("DAST Enabled: $isDASTEnabled")
+                    print("DAST+Manual Enabled: $isDASTPlusMEnabled")
                 }
             }
         }
@@ -70,6 +81,22 @@ pipeline {
                 synopsysIO() {
                     sh 'io --stage execution --adapters spotbugs-adapter.json --state io_state.json'
                 }
+            }
+        }
+
+        stage('Out-of-Band Activity - SAST Plus Manual') {
+            when {
+                conditional { isSASTPlusMEnabled }
+            }
+            input {
+                message "Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?"
+                ok "Approve"
+                parameters {
+                    string(name: 'ApprovalComment', defaultValue: 'Approved', description: 'Approval Comment.')
+                }
+            }
+            steps {
+                echo "$Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
             }
         }
 
