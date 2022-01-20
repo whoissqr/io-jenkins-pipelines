@@ -45,18 +45,12 @@ pipeline {
                 print("AccessScore: $prescriptionJSON.Data.Prescription.RiskScore.AccessScore")
                 print("ToolingScore: $prescriptionJSON.Data.Prescription.RiskScore.ToolingScore")
                 print("TrainingScore: $prescriptionJSON.Data.Prescription.RiskScore.TrainingScore")
-
-                def isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
-                def isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
-
-                stash isSASTEnabled
-                stash isSCAEnabled
             }
         }
 
         stage('SAST - SpotBugs') {
             when {
-                unstash isSASTEnabled
+                isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
                 expression { isSASTEnabled }
             }
             steps {
