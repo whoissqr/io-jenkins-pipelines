@@ -52,6 +52,9 @@ pipeline {
 
                     isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
                     isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
+
+                    isSASTEnabled = false
+                    isSCAEnabled = false
                 }
             }
         }
