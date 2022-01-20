@@ -86,7 +86,7 @@ pipeline {
 
         stage('Out-of-Band Activity - SAST Plus Manual') {
             when {
-                conditional { isSASTPlusMEnabled }
+                expression { isSASTPlusMEnabled }
             }
             input {
                 message "Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?"
@@ -96,7 +96,7 @@ pipeline {
                 }
             }
             steps {
-                echo "$Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
+                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
             }
         }
 
