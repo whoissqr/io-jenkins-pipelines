@@ -1,3 +1,6 @@
+def isSASTEnabled
+def isSCAEnabled
+
 pipeline {
     agent any
     tools {
@@ -47,8 +50,8 @@ pipeline {
                     print("ToolingScore: $prescriptionJSON.Data.Prescription.RiskScore.ToolingScore")
                     print("TrainingScore: $prescriptionJSON.Data.Prescription.RiskScore.TrainingScore")
 
-                    def isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
-                    def isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
+                    isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
+                    isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
                 }
             }
         }
