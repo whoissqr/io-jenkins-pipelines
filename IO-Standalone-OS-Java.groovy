@@ -1,3 +1,6 @@
+def isSASTEnabled = false
+def isSCAEnabled = false
+
 pipeline {
     agent any
     tools {
@@ -34,7 +37,27 @@ pipeline {
             }
         }
 
+        stage('IO - Read Prescription') {
+            steps {
+                def prescriptionJSON = readJSON file: 'io_state.json'
+                print("Updated Prescription JSON :\n$prescriptionJSON\n")
+                print("SAST Enabled: $prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled")
+                print("SCA Enabled: $prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled")
+                print("BusinessCriticalityScore: $prescriptionJSON.Data.Prescription.RiskScore.BusinessCriticalityScore")
+                print("DataClassScore: $prescriptionJSON.Data.Prescription.RiskScore.DataClassScore")
+                print("AccessScore: $prescriptionJSON.Data.Prescription.RiskScore.AccessScore")
+                print("ToolingScore: $prescriptionJSON.Data.Prescription.RiskScore.ToolingScore")
+                print("TrainingScore: $prescriptionJSON.Data.Prescription.RiskScore.TrainingScore")
+
+                isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
+                isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
+            }
+        }
+
         stage('SAST - SpotBugs') {
+            when {
+                expression { isSASTEnabled }
+            }
             steps {
                 echo 'Running SAST using SpotBugs'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/spotbugs/spotbugs-adapter.json --output spotbugs-adapter.json'
@@ -46,6 +69,9 @@ pipeline {
         }
 
         stage('SCA - Dependency-Check') {
+            when {
+                expression { isSCAEnabled }
+            }
             steps {
                 echo 'Running SCA using Dependency-Check'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/dependency-check/dependency-check-adapter.json --output dependency-check-adapter.json'
