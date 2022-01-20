@@ -60,6 +60,8 @@ pipeline {
                     print("SCA Enabled: $isSCAEnabled")
                     print("DAST Enabled: $isDASTEnabled")
                     print("DAST+Manual Enabled: $isDASTPlusMEnabled")
+
+                    isSASTEnabled = false
                 }
             }
         }
