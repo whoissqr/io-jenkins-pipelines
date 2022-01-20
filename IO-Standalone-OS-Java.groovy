@@ -37,11 +37,7 @@ pipeline {
                     buildBreaker(configName: 'BB-ALL')]) {
                         sh 'io --stage io'
                     }
-            }
-        }
 
-        stage('IO - Read Prescription') {
-            steps {
                 script {
                     def prescriptionJSON = readJSON file: 'io_state.json'
 
@@ -58,8 +54,6 @@ pipeline {
                     isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
                     isDASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Dast.Enabled
                     isDASTPlusMEnabled = prescriptionJSON.Data.Prescription.Security.Activities.DastPlusM.Enabled
-
-                    isSASTEnabled = false;
 
                     print("SAST Enabled: $isSASTEnabled")
                     print("SAST+Manual Enabled: $isSASTPlusMEnabled")
@@ -84,7 +78,7 @@ pipeline {
             }
         }
 
-        stage('Out-of-Band Activity - SAST Plus Manual') {
+        stage('SAST Plus Manual') {
             when {
                 expression { isSASTPlusMEnabled }
             }
@@ -111,6 +105,22 @@ pipeline {
                 synopsysIO() {
                     sh 'io --stage execution --adapters dependency-check-adapter.json --state io_state.json'
                 }
+            }
+        }
+
+        stage('DAST Plus Manual') {
+            when {
+                expression { isDASTPlusMEnabled }
+            }
+            input {
+                message "Major code change detected, manual threat-modeling (DAST - Manual) triggerd. Proceed?"
+                ok "Approve"
+                parameters {
+                    string(name: 'ApprovalComment', defaultValue: 'Approved', description: 'Approval Comment.')
+                }
+            }
+            steps {
+                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
             }
         }
 
