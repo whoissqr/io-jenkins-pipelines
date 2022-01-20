@@ -36,21 +36,25 @@ pipeline {
 
         stage('IO - Read Prescription') {
             steps {
-                def prescriptionJSON = readJSON file: 'io_state.json'
-                print("Updated Prescription JSON :\n$prescriptionJSON\n")
-                print("SAST Enabled: $prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled")
-                print("SCA Enabled: $prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled")
-                print("BusinessCriticalityScore: $prescriptionJSON.Data.Prescription.RiskScore.BusinessCriticalityScore")
-                print("DataClassScore: $prescriptionJSON.Data.Prescription.RiskScore.DataClassScore")
-                print("AccessScore: $prescriptionJSON.Data.Prescription.RiskScore.AccessScore")
-                print("ToolingScore: $prescriptionJSON.Data.Prescription.RiskScore.ToolingScore")
-                print("TrainingScore: $prescriptionJSON.Data.Prescription.RiskScore.TrainingScore")
+                script {
+                    def prescriptionJSON = readJSON file: 'io_state.json'
+                    print("Updated Prescription JSON :\n$prescriptionJSON\n")
+                    print("SAST Enabled: $prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled")
+                    print("SCA Enabled: $prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled")
+                    print("BusinessCriticalityScore: $prescriptionJSON.Data.Prescription.RiskScore.BusinessCriticalityScore")
+                    print("DataClassScore: $prescriptionJSON.Data.Prescription.RiskScore.DataClassScore")
+                    print("AccessScore: $prescriptionJSON.Data.Prescription.RiskScore.AccessScore")
+                    print("ToolingScore: $prescriptionJSON.Data.Prescription.RiskScore.ToolingScore")
+                    print("TrainingScore: $prescriptionJSON.Data.Prescription.RiskScore.TrainingScore")
+
+                    def isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
+                    def isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
+                }
             }
         }
 
         stage('SAST - SpotBugs') {
             when {
-                isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
                 expression { isSASTEnabled }
             }
             steps {
