@@ -63,6 +63,7 @@ def execute() {
 
             isSASTEnabled = false
             isSASTPlusMEnabled = true
+            isDASTPlusMEnabled = true
         }
 
         stage('SAST - Sigma - RapidScan') {
@@ -92,13 +93,10 @@ def execute() {
 
         stage('SAST Plus Manual') {
             if (isSASTPlusMEnabled) {
-                // def userInput = input (
-                //     message: 'Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?',
-                //     ok: 'Approve'
-                //     ) {
-                //         echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
-                //     }
-                def userInput = input message: 'Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?', ok: 'Go ahead', parameters: [string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')]
+                def userInput = input message: 'Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?',
+                    ok: 'Go ahead',
+                    parameters: [string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')]
+
                 echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: ${userInput}"
             }
         }
@@ -114,6 +112,16 @@ def execute() {
                     }
             } else {
                 echo 'SCA not enabled, skipping BlackDuck'
+            }
+        }
+
+        stage('DAST Plus Manual') {
+            if (isDASTPlusMEnabled) {
+                def userInput = input message: 'Major code change detected, manual threat-modeling (DAST - Manual) triggerd. Proceed?',
+                    ok: 'Go ahead',
+                    parameters: [string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')]
+
+                echo "Out-of-Band Activity - DAST Plus Manual triggered & approved with comment: ${userInput}"
             }
         }
 
