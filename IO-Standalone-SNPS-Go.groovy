@@ -124,7 +124,7 @@ pipeline {
                 }
             }
             steps {
-                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$Comment}."
+                echo "Out-of-Band Activity - DAST Plus Manual triggered & approved with comment: {$Comment}."
             }
         }
 
