@@ -2,9 +2,9 @@
 
 ## Overview
 
-### Jenkins Shared Library for JavaScript
+### Jenkins Shared Library for Go
 
-Shared library code to run JavaScript projects. Security stages & configured tools:
+Shared library code to run Go projects. Security stages & configured tools:
 
 - SAST
   - Sigma
@@ -33,8 +33,8 @@ Finally, create a job that runs the project as a pipeline utilizing the above co
 - Navigate to Jenkins's global configuration page (Jenkins Dashboard > Manage Jenkins > Configure System)
 - Locate 'Global Pipeline Libraries'
   - 'Add' a new entry.
-  - Set name: 'io-library-javascript'
-  - Set version: 'shared-library-javascript'
+  - Set name: 'io-library-go'
+  - Set version: 'shared-library-go'
   - Set retrieval method: Modern SCM
   - Set Source Code Management: GitHub
   - Set Project Repository: 'https://github.com/devsecops-test/io-jenkins-pipelines/'
@@ -50,7 +50,7 @@ Finally, create a job that runs the project as a pipeline utilizing the above co
   - Line #2 imports all code from the shared-library package: `com.synopsys`.
   - Line #3 triggers the execution of the shared-library code from the `execute()` method.
 ````
-@Library('io-library-javascript')
+@Library('io-library-go')
 import com.synopsys.*
 new pipeline.SecurityPipeline().execute()
 ````
@@ -60,7 +60,7 @@ new pipeline.SecurityPipeline().execute()
 - Create a new job on Jenkins (Type: Pipeline)
 - Pipeline Defintion: 'Pipeline script from SCM'
 - Set SCM: 'Git'
-- Set Repository URL (to the project selected in the step above, eg: 'https://github.com/devsecops-test/vulnerable-node')
+- Set Repository URL (to the project selected in the step above, eg: 'https://github.com/devsecops-test/govwa')
 - Set Branch Specifier (to the appropriate branch on the project selected in the step above, eg:'*/devsecops-shared-library')
 - Ensure 'Script Path' is set to 'Jenkinsfile'.
 - Save pipeline job configuration.
@@ -78,11 +78,7 @@ Set the parameters required for the build & execute.
 - GitHubOwner - The owner of the repository for the GitHub project.
 - GitHubRepositoryName - The name of the GitHub repository.
 - BuildBreakerConfigName - Build Breaker configuration name.
-- PolarisClassName - Class name for Polaris
-- PolarisConfigName - The configuration name for Polaris (configured under Jenkin's global configuration for IO).
-- PolarisProjectName - The name of the project as configured on the Polaris instance.
 - BlackDuckConfigName - The configuration name for BlackDuck (configured under Jenkin's global configuration for IO).
 - BlackDuckProjectName - The name of the project as configured on the BlackDuck instance.
 - BlackDuckProjectVersion - The version of the project configured for the BlackDuck scan.
-- ESLint - (Boolean) Enable to also execute ESLint during the SAST stage (only runs if SAST is enabled by IO's prescription).
-- NPMAudit - (Boolean) Enable to also execute NPM Audit during the SCA stage (only runs if SCA is enabled by IO's prescription).
+- GoSec - (Boolean) Enable to also execute GoSec during the SAST stage (only runs if SAST is enabled by IO's prescription).

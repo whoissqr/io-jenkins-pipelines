@@ -13,7 +13,7 @@ class BuildUtil implements Serializable {
     this.steps = steps
   }
 
-  def npm(args) {
-    steps.sh "${steps.tool 'NodeJS'}/bin/npm ${args}"
+  def go(args) {
+    steps.sh "${steps.tool 'Go'}/bin/go ${args}"
   }
 }

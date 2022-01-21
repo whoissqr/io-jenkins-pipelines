@@ -21,7 +21,7 @@ def execute() {
 
         stage('Build Source Code') {
             def buildUtil = new BuildUtil(this)
-            buildUtil.npm 'install > npm-install.log'
+            buildUtil.go 'build > go-install.log'
         }
 
         stage('IO - Prescription') {
@@ -71,26 +71,13 @@ def execute() {
             }
         }
 
-        stage('SAST - Polaris') {
-            if (isSASTEnabled) {
-                echo 'Running SAST using Polaris'
-                synopsysIO(connectors: [
-                    [$class: "${PolarisClassName}",
-                    configName: "${PolarisConfigName}",
-                    projectName: "${PolarisProjectName}"]]) {
-                        sh 'io --stage execution --state io_state.json'
-                    }
-            }
-        }
-
-        stage('SAST - ESLint') {
-            if (isSASTEnabled && params.ESLint) {
-                echo 'Running SAST using ESLint'
-                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/eslint/eslint-adapter.json --output eslint-adapter.json'
-                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/eslint/eslint.sh --output eslint.sh'
-                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/eslint/eslintrc.json --output .eslintrc.json'
+        stage('SAST - GoSec') {
+            if (isSASTEnabled && params.GoSec) {
+                echo 'Running SAST using GoSec'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/gosec/gosec-adapter.json --output gosec-adapter.json'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/gosec/gosec.sh --output gosec.sh'
                 synopsysIO() {
-                    sh 'io --stage execution --adapters eslint-adapter.json --state io_state.json || true'
+                    sh 'io --stage execution --adapters gosec-adapter.json --state io_state.json || true'
                 }
             }
         }
@@ -117,17 +104,6 @@ def execute() {
             }
         }
 
-        stage('SCA - NPM Audit') {
-            if (isSCAEnabled && params.NPMAudit) {
-                echo 'Running SCA using NPM Audit'
-                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/npm-audit/npm-audit-adapter.json --output npm-audit-adapter.json'
-                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/npm-audit/npm-audit.sh --output npm-audit.sh'
-                synopsysIO() {
-                    sh 'io --stage execution --adapters npm-audit-adapter.json --state io_state.json'
-                }
-            }
-        }
-
         stage('DAST Plus Manual') {
             if (isDASTPlusMEnabled) {
                 def userInput = input message: 'Major code change detected, manual threat-modeling (DAST - Manual) triggerd. Proceed?',
@@ -148,9 +124,7 @@ def execute() {
         stage('IO - Archive') {
             // Archive Results & Logs
             archiveArtifacts artifacts: '**/*-results*.json', allowEmptyArchive: 'true'
-            archiveArtifacts artifacts: 'npm-install.log', allowEmptyArchive: 'true'
-            archiveArtifacts artifacts: 'npm-audit.log', allowEmptyArchive: 'true'
-            archiveArtifacts artifacts: 'npm-eslint.log', allowEmptyArchive: 'true'
+            archiveArtifacts artifacts: 'go-build.log', allowEmptyArchive: 'true'
 
             // Remove the state json file as it has sensitive information
             sh 'rm io_state.json'
