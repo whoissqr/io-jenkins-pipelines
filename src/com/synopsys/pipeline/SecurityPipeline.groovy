@@ -91,7 +91,7 @@ def execute() {
         }
 
         if (isSASTPlusMEnabled) {
-            SASTPlusM()
+            SASTPlusM(isSASTPlusMEnabled)
         }
 
         // stage('SAST Plus Manual') {

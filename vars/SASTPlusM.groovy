@@ -1,4 +1,4 @@
-def call() {
+def call(isSASTPlusMEnabled) {
     pipeline {
         stage('SAST Plus Manual') {
             if (isSASTPlusMEnabled) {
