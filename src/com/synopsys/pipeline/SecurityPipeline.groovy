@@ -62,6 +62,7 @@ def execute() {
             print("DAST+Manual Enabled: $isDASTPlusMEnabled")
 
             isSASTEnabled = false
+            isSASTPlusMEnabled = true
         }
 
         stage('SAST - Sigma - RapidScan') {
