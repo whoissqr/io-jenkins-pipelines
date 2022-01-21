@@ -72,7 +72,7 @@ def execute() {
         }
 
         stage('SAST - Polaris') {
-            if (false) {
+            if (isSASTEnabled) {
                 echo 'Running SAST using Polaris'
                 synopsysIO(connectors: [
                     [$class: "${PolarisClassName}",
