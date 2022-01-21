@@ -98,7 +98,8 @@ def execute() {
                 //     ) {
                 //         echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
                 //     }
-                def userInput = input message: 'Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?', ok: 'Go ahead'
+                def userInput = input message: 'Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?', ok: 'Go ahead', parameters: string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')
+                }
 
                 echo "${userInput}"
             }
