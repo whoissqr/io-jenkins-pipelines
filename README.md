@@ -85,4 +85,4 @@ Set the parameters required for the build & execute.
 - BlackDuckProjectName - The name of the project as configured on the BlackDuck instance.
 - BlackDuckProjectVersion - The version of the project configured for the BlackDuck scan.
 - SpotBugs - (Boolean) Enable to also execute SpotBugs during the SAST stage (only runs if SAST is enabled by IO's prescription).
-- DependencyCheck - (Boolean) Enable to also execute Spendency-Check during the SCA stage (only runs if SCA is enabled by IO's prescription).
+- DependencyCheck - (Boolean) Enable to also execute Dependency-Check during the SCA stage (only runs if SCA is enabled by IO's prescription).
