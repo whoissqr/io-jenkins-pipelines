@@ -60,6 +60,8 @@ def execute() {
             print("SCA Enabled: $isSCAEnabled")
             print("DAST Enabled: $isDASTEnabled")
             print("DAST+Manual Enabled: $isDASTPlusMEnabled")
+
+            isSASTEnabled = false
         }
 
         stage('SAST - Sigma - RapidScan') {
@@ -84,6 +86,21 @@ def execute() {
                     }
             } else {
                 echo 'SAST not enabled, skipping Polaris'
+            }
+        }
+
+        stage('SAST Plus Manual') {
+            if (isSASTPlusMEnabled) {
+                def userInput = input (
+                    message: "Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?",
+                    ok: "Approve",
+                    parameters: [
+                        string: [
+                            name: 'ApprovalComment',
+                            defaultValue: 'Approved',
+                            description: 'Approval Comment.']]) {
+                                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
+                            }
             }
         }
 
