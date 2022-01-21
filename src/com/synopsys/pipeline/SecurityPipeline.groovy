@@ -148,6 +148,8 @@ def execute() {
             // Archive Results & Logs
             archiveArtifacts artifacts: '**/*-results*.json', allowEmptyArchive: 'true'
             archiveArtifacts artifacts: 'mvn-install.log', allowEmptyArchive: 'true'
+            archiveArtifacts artifacts: 'spotbugs-report.html', allowEmptyArchive: 'true'
+            archiveArtifacts artifacts: 'dependency-check-report.html', allowEmptyArchive: 'true'
 
             // Remove the state json file as it has sensitive information
             sh 'rm io_state.json'
