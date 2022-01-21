@@ -86,11 +86,11 @@ pipeline {
                 message "Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?"
                 ok "Approve"
                 parameters {
-                    string(name: 'ApprovalComment', defaultValue: 'Approved', description: 'Approval Comment.')
+                    string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')
                 }
             }
             steps {
-                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
+                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$Comment}."
             }
         }
 
@@ -102,11 +102,11 @@ pipeline {
                 message "Major code change detected, manual threat-modeling (DAST - Manual) triggerd. Proceed?"
                 ok "Approve"
                 parameters {
-                    string(name: 'ApprovalComment', defaultValue: 'Approved', description: 'Approval Comment.')
+                    string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')
                 }
             }
             steps {
-                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
+                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$Comment}."
             }
         }
 
