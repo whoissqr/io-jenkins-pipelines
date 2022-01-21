@@ -68,8 +68,6 @@ def execute() {
                 synopsysIO(connectors: [rapidScan(configName: 'Sigma')]) {
                     sh 'io --stage execution --state io_state.json'
                 }
-            } else {
-                echo 'SAST not enabled, skipping Sigma - RapidScan'
             }
         }
 
@@ -82,8 +80,6 @@ def execute() {
                     projectName: "${PolarisProjectName}"]]) {
                         sh 'io --stage execution --state io_state.json'
                     }
-            } else {
-                echo 'SAST not enabled, skipping Polaris'
             }
         }
 
@@ -95,8 +91,6 @@ def execute() {
                 synopsysIO() {
                     sh 'io --stage execution --adapters spotbugs-adapter.json --state io_state.json'
                 }
-            } else {
-                echo 'SAST not enabled, or enabled but SpotBugs not enabled, skipping SpotBugs'
             }
         }
 
@@ -119,8 +113,6 @@ def execute() {
                     projectVersion: "${BlackDuckProjectVersion}")]) {
                         sh 'io --stage execution --state io_state.json'
                     }
-            } else {
-                echo 'SCA not enabled, skipping BlackDuck'
             }
         }
 
@@ -132,8 +124,6 @@ def execute() {
                 synopsysIO() {
                     sh 'io --stage execution --adapters dependency-check-adapter.json --state io_state.json'
                 }
-            } else {
-                echo 'SCA not enabled, or enabled but DependencyCheck not enabled, skipping DependencyCheck'
             }
         }
 
