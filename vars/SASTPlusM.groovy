@@ -1,7 +1,7 @@
 def call(isSASTPlusMEnabled) {
     pipeline {
         stage('SAST Plus Manual') {
-            step {
+            //step {
                 script {
                     if (isSASTPlusMEnabled) {
                         input {
@@ -14,7 +14,7 @@ def call(isSASTPlusMEnabled) {
                         echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
                     }
                 }
-            }
+            //}
         }
     }
 }
