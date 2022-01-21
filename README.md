@@ -8,7 +8,7 @@ Shared library code to run Go projects. Security stages & configured tools:
 
 - SAST
   - Sigma
-  - Polaris
+  - GoSec
 - SCA:
   - BlackDuck
 
@@ -61,7 +61,7 @@ new pipeline.SecurityPipeline().execute()
 - Pipeline Defintion: 'Pipeline script from SCM'
 - Set SCM: 'Git'
 - Set Repository URL (to the project selected in the step above, eg: 'https://github.com/devsecops-test/govwa')
-- Set Branch Specifier (to the appropriate branch on the project selected in the step above, eg:'*/devsecops-shared-library')
+- Set Branch Specifier (to the appropriate branch on the project selected in the step above, eg:'*/devsecops-shared-library-go')
 - Ensure 'Script Path' is set to 'Jenkinsfile'.
 - Save pipeline job configuration.
 
