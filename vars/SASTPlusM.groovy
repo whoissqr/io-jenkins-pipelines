@@ -1,3 +1,4 @@
+@NonCPS
 def call(isSASTPlusMEnabled) {
     pipeline {
         stage('SAST Plus Manual') {
