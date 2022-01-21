@@ -9,8 +9,10 @@ Shared library code to run JavaScript projects. Security stages & configured too
 - SAST
   - Sigma
   - Polaris
+  - ESLint
 - SCA:
   - BlackDuck
+  - NPM Audit
 
 ### Code
 
@@ -61,7 +63,7 @@ new pipeline.SecurityPipeline().execute()
 - Pipeline Defintion: 'Pipeline script from SCM'
 - Set SCM: 'Git'
 - Set Repository URL (to the project selected in the step above, eg: 'https://github.com/devsecops-test/vulnerable-node')
-- Set Branch Specifier (to the appropriate branch on the project selected in the step above, eg:'*/devsecops-shared-library')
+- Set Branch Specifier (to the appropriate branch on the project selected in the step above, eg:'*/devsecops-shared-library-javascript')
 - Ensure 'Script Path' is set to 'Jenkinsfile'.
 - Save pipeline job configuration.
 
