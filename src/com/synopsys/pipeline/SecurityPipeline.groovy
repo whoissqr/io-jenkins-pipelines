@@ -60,10 +60,6 @@ def execute() {
             print("SCA Enabled: $isSCAEnabled")
             print("DAST Enabled: $isDASTEnabled")
             print("DAST+Manual Enabled: $isDASTPlusMEnabled")
-
-            isSASTEnabled = false
-            isSASTPlusMEnabled = true
-            isDASTPlusMEnabled = true
         }
 
         stage('SAST - Sigma - RapidScan') {
@@ -91,6 +87,19 @@ def execute() {
             }
         }
 
+        stage('SAST - SpotBugs') {
+            if (isSASTEnabled && SpotBugs) {
+                echo 'Running SAST using SpotBugs'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/spotbugs/spotbugs-adapter.json --output spotbugs-adapter.json'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/spotbugs/spotbugs.sh --output spotbugs.sh'
+                synopsysIO() {
+                    sh 'io --stage execution --adapters spotbugs-adapter.json --state io_state.json'
+                }
+            } else {
+                echo 'SAST not enabled, or enabled but SpotBugs not enabled, skipping SpotBugs'
+            }
+        }
+
         stage('SAST Plus Manual') {
             if (isSASTPlusMEnabled) {
                 def userInput = input message: 'Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?',
@@ -112,6 +121,19 @@ def execute() {
                     }
             } else {
                 echo 'SCA not enabled, skipping BlackDuck'
+            }
+        }
+
+        stage('SCA - Dependency-Check') {
+            if (isSCAEnabled && DependencyCheck) {
+                echo 'Running SCA using Dependency-Check'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/dependency-check/dependency-check-adapter.json --output dependency-check-adapter.json'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/dependency-check/dependency-check.sh --output dependency-check.sh'
+                synopsysIO() {
+                    sh 'io --stage execution --adapters dependency-check-adapter.json --state io_state.json'
+                }
+            } else {
+                echo 'SCA not enabled, or enabled but DependencyCheck not enabled, skipping DependencyCheck'
             }
         }
 
