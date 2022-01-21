@@ -9,8 +9,10 @@ Shared library code to run Java projects. Security stages & configured tools:
 - SAST
   - Sigma
   - Polaris
+  - SpotBugs
 - SCA:
   - BlackDuck
+  - Dependency-Check
 
 ### Code
 
@@ -61,7 +63,7 @@ new pipeline.SecurityPipeline().execute()
 - Pipeline Defintion: 'Pipeline script from SCM'
 - Set SCM: 'Git'
 - Set Repository URL (to the project selected in the step above, eg: 'https://github.com/devsecops-test/vulnado')
-- Set Branch Specifier (to the appropriate branch on the project selected in the step above, eg:'*/devsecops-shared-library')
+- Set Branch Specifier (to the appropriate branch on the project selected in the step above, eg:'*/devsecops-shared-library-java')
 - Ensure 'Script Path' is set to 'Jenkinsfile'.
 - Save pipeline job configuration.
 
