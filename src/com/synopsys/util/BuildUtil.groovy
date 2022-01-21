@@ -16,4 +16,12 @@ class BuildUtil implements Serializable {
   def mvn(args) {
     steps.sh "${steps.tool 'Maven3'}/bin/mvn ${args}"
   }
+
+  def npm(args) {
+    steps.sh "${steps.tool 'NodeJS'}/bin/npm ${args}"
+  }
+
+  def go(args) {
+    steps.sh "${steps.tool 'Go'}/bin/go ${args}"
+  }
 }

@@ -21,7 +21,14 @@ def execute() {
 
         stage('Build Source Code') {
             def buildUtil = new BuildUtil(this)
-            buildUtil.mvn 'clean compile > mvn-install.log'
+
+            if (params.Language == 'Java') {
+                buildUtil.mvn 'clean compile > mvn-install.log'
+            } else if (params.Language == 'JavaScript') {
+                buildUtil.npm 'install > npm-install.log'
+            }  else if (params.Language == 'Go') {
+                buildUtil.go 'build > go-install.log'
+            }
         }
 
         stage('IO - Prescription') {
@@ -84,12 +91,35 @@ def execute() {
         }
 
         stage('SAST - SpotBugs') {
-            if (isSASTEnabled && params.SpotBugs) {
+            if (isSASTEnabled && params.SpotBugs && params.Language == 'Java') {
                 echo 'Running SAST using SpotBugs'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/spotbugs/spotbugs-adapter.json --output spotbugs-adapter.json'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/spotbugs/spotbugs.sh --output spotbugs.sh'
                 synopsysIO() {
                     sh 'io --stage execution --adapters spotbugs-adapter.json --state io_state.json'
+                }
+            }
+        }
+
+        stage('SAST - ESLint') {
+            if (isSASTEnabled && params.ESLint && params.Language == 'JavaScript') {
+                echo 'Running SAST using ESLint'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/eslint/eslint-adapter.json --output eslint-adapter.json'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/eslint/eslint.sh --output eslint.sh'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/eslint/eslintrc.json --output .eslintrc.json'
+                synopsysIO() {
+                    sh 'io --stage execution --adapters eslint-adapter.json --state io_state.json || true'
+                }
+            }
+        }
+
+        stage('SAST - GoSec') {
+            if (isSASTEnabled && params.GoSec && params.Language == 'Go') {
+                echo 'Running SAST using GoSec'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/gosec/gosec-adapter.json --output gosec-adapter.json'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/gosec/gosec.sh --output gosec.sh'
+                synopsysIO() {
+                    sh 'io --stage execution --adapters gosec-adapter.json --state io_state.json || true'
                 }
             }
         }
@@ -117,12 +147,23 @@ def execute() {
         }
 
         stage('SCA - Dependency-Check') {
-            if (isSCAEnabled && params.DependencyCheck) {
+            if (isSCAEnabled && params.DependencyCheck && params.Language == 'Java') {
                 echo 'Running SCA using Dependency-Check'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/dependency-check/dependency-check-adapter.json --output dependency-check-adapter.json'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/dependency-check/dependency-check.sh --output dependency-check.sh'
                 synopsysIO() {
                     sh 'io --stage execution --adapters dependency-check-adapter.json --state io_state.json'
+                }
+            }
+        }
+
+        stage('SCA - NPM Audit') {
+            if (isSCAEnabled && params.NPMAudit && params.Language == 'JavaScript') {
+                echo 'Running SCA using NPM Audit'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/npm-audit/npm-audit-adapter.json --output npm-audit-adapter.json'
+                sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/npm-audit/npm-audit.sh --output npm-audit.sh'
+                synopsysIO() {
+                    sh 'io --stage execution --adapters npm-audit-adapter.json --state io_state.json'
                 }
             }
         }
@@ -150,6 +191,10 @@ def execute() {
             archiveArtifacts artifacts: 'mvn-install.log', allowEmptyArchive: 'true'
             archiveArtifacts artifacts: 'spotbugs-report.html', allowEmptyArchive: 'true'
             archiveArtifacts artifacts: 'dependency-check-report.html', allowEmptyArchive: 'true'
+            archiveArtifacts artifacts: 'npm-install.log', allowEmptyArchive: 'true'
+            archiveArtifacts artifacts: 'npm-audit.log', allowEmptyArchive: 'true'
+            archiveArtifacts artifacts: 'npm-eslint.log', allowEmptyArchive: 'true'
+            archiveArtifacts artifacts: 'go-build.log', allowEmptyArchive: 'true'
 
             // Remove the state json file as it has sensitive information
             sh 'rm io_state.json'

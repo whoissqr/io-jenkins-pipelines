@@ -2,15 +2,20 @@
 
 ## Overview
 
-### Jenkins Shared Library for Java
+### Jenkins Shared Library
 
-Shared library code to run Java projects. Security stages & configured tools:
+Shared library code. Security stages & configured tools:
 
 - SAST
   - Sigma
   - Polaris
+  - SpotBugs (For Java)
+  - ESLint (For JavaScript)
+  - GoSec (For Go)
 - SCA:
   - BlackDuck
+  - Dependency-Check (FOr Java)
+  - NPM Audit (For JavaScript)
 
 ### Code
 
@@ -33,8 +38,8 @@ Finally, create a job that runs the project as a pipeline utilizing the above co
 - Navigate to Jenkins's global configuration page (Jenkins Dashboard > Manage Jenkins > Configure System)
 - Locate 'Global Pipeline Libraries'
   - 'Add' a new entry.
-  - Set name: 'io-library-java'
-  - Set version: 'shared-library-java'
+  - Set name: 'io-library'
+  - Set version: 'shared-library'
   - Set retrieval method: Modern SCM
   - Set Source Code Management: GitHub
   - Set Project Repository: 'https://github.com/devsecops-test/io-jenkins-pipelines/'
@@ -50,7 +55,7 @@ Finally, create a job that runs the project as a pipeline utilizing the above co
   - Line #2 imports all code from the shared-library package: `com.synopsys`.
   - Line #3 triggers the execution of the shared-library code from the `execute()` method.
 ````
-@Library('io-library-java')
+@Library('io-library')
 import com.synopsys.*
 new pipeline.SecurityPipeline().execute()
 ````
@@ -69,6 +74,7 @@ new pipeline.SecurityPipeline().execute()
 
 Set the parameters required for the build & execute.
 
+- Language - THe language of the project.
 - SCMURL - The URL of the project to build.
 - SCMBranch - The branch of the project to build.
 - IOConfigName - The configuration name of IO (configured under Jenkin's global configuration for IO).
@@ -84,5 +90,8 @@ Set the parameters required for the build & execute.
 - BlackDuckConfigName - The configuration name for BlackDuck (configured under Jenkin's global configuration for IO).
 - BlackDuckProjectName - The name of the project as configured on the BlackDuck instance.
 - BlackDuckProjectVersion - The version of the project configured for the BlackDuck scan.
-- SpotBugs - (Boolean) Enable to also execute SpotBugs during the SAST stage (only runs if SAST is enabled by IO's prescription).
-- DependencyCheck - (Boolean) Enable to also execute Dependency-Check during the SCA stage (only runs if SCA is enabled by IO's prescription).
+- SpotBugs - (Boolean) Enable to also execute SpotBugs during the SAST stage (only runs if SAST is enabled by IO's prescription for a Java project).
+- DependencyCheck - (Boolean) Enable to also execute Dependency-Check during the SCA stage (only runs if SCA is enabled by IO's prescription for a Java project).
+- ESLint - (Boolean) Enable to also execute ESLint during the SAST stage (only runs if SAST is enabled by IO's prescription for a JavaScript project).
+- NPMAudit - (Boolean) Enable to also execute NPM Audit during the SCA stage (only runs if SCA is enabled by IO's prescription for a JavaScript project).
+- GoSec - (Boolean) Enable to also execute GoSec during the SAST stage (only runs if SAST is enabled by IO's prescription for a Go project).
