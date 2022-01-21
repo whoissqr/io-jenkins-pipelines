@@ -1,7 +1,7 @@
 def call(isSASTPlusMEnabled) {
     pipeline {
         stage('SAST Plus Manual') {
-            steps {
+            step {
                 script {
                     if (isSASTPlusMEnabled) {
                         input {
