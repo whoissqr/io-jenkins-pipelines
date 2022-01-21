@@ -92,12 +92,13 @@ def execute() {
 
         stage('SAST Plus Manual') {
             if (isSASTPlusMEnabled) {
-                def userInput = input (
-                    message: 'Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?',
-                    ok: 'Approve',
-                    ) {
-                                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
-                            }
+                // def userInput = input (
+                //     message: 'Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?',
+                //     ok: 'Approve'
+                //     ) {
+                //         echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$ApprovalComment}."
+                //     }
+                input message: 'Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?', ok: 'Go ahead'
             }
         }
 
