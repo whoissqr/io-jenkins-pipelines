@@ -60,7 +60,27 @@ new pipeline.SecurityPipeline().execute()
 - Create a new job on Jenkins (Type: Pipeline)
 - Pipeline Defintion: 'Pipeline script from SCM'
 - Set SCM: 'Git'
-- Set Repository URL (to the project selected in the step above), eg: 'https://github.com/devsecops-test/vulnado'
-- Set Branch Specifier: '*/devsecops-shared-library'.
+- Set Repository URL (to the project selected in the step above, eg: 'https://github.com/devsecops-test/vulnado')
+- Set Branch Specifier (to the appropriate branch on the project selected in the step above, eg:'*/devsecops-shared-library')
 - Ensure 'Script Path' is set to 'Jenkinsfile'.
-- Save & execute.
+- Save pipeline job configuration.
+
+### Parameters
+
+Set the parameters required for the build & execute.
+
+- SCMURL - The URL of the project to build.
+- SCMBranch - The branch of the project to build.
+- IOConfigName - The configuration name of IO (configured under Jenkin's global configuration for IO).
+- IOProjectName - The project name configured for this build through IO's UI.
+- IOWorkflowVersion - The IO workflow version.
+- GitHubConfigName - The configuration name for GitHub (configured under Jenkin's global configuration for IO).
+- GitHubOwner - The owner of the repository for the GitHub project.
+- GitHubRepositoryName - The name of the GitHub repository.
+- BuildBreakerConfigName - Build Breaker configuration name.
+- PolarisClassName - Class name for Polaris
+- PolarisConfigName - The configuration name for Polaris (configured under Jenkin's global configuration for IO).
+- PolarisProjectName - The name of the project as configured on the Polaris instance.
+- BlackDuckConfigName - The configuration name for BlackDuck (configured under Jenkin's global configuration for IO).
+- BlackDuckProjectName - The name of the project as configured on the BlackDuck instance.
+- BlackDuckProjectVersion - The version of the project configured for the BlackDuck scan.

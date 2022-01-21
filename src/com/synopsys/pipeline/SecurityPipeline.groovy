@@ -16,7 +16,7 @@ def execute() {
 
     node('master') {
         stage('Checkout Code') {
-            git branch: 'devsecops', url: 'https://github.com/devsecops-test/vulnado'
+            git branch: "${SCMBranch}", url: "${SCMURL}"
         }
 
         stage('Build Source Code') {
@@ -27,15 +27,15 @@ def execute() {
         stage('IO - Prescription') {
             synopsysIO(connectors: [
                 io(
-                    configName: 'io-azure',
-                    projectName: 'devsecops-vulnado',
-                    workflowVersion: '2021.12.2'),
+                    configName: "${IOConfigName}",
+                    projectName: "${IOProjectName}",
+                    workflowVersion: "${IOWorkflowVersion}"),
                 github(
-                    branch: 'devsecops',
-                    configName: 'github-devsecops',
-                    owner: 'devsecops-test',
-                    repositoryName: 'vulnado'),
-                buildBreaker(configName: 'BB-ALL')]) {
+                    branch: "${SCMBranch}",
+                    configName: "${GitHubConfigName}",
+                    owner: "${GitHubOwner}",
+                    repositoryName: "${GitHubRepositoryName}"),
+                buildBreaker(configName: "${BuildBreakerConfigName}")]) {
                     sh 'io --stage io'
                 }
 
@@ -77,9 +77,9 @@ def execute() {
             if (isSASTEnabled) {
                 echo 'Running SAST using Polaris'
                 synopsysIO(connectors: [
-                    [$class: 'PolarisPipelineConfig',
-                    configName: 'csprod-polaris',
-                    projectName: 'sig-devsecops/vulnado']]) {
+                    [$class: "${PolarisClassName}",
+                    configName: "${PolarisConfigName}",
+                    projectName: "${PolarisProjectName}"]]) {
                         sh 'io --stage execution --state io_state.json'
                     }
             } else {
@@ -91,9 +91,9 @@ def execute() {
             if (isSCAEnabled) {
                 echo 'Running SCA using BlackDuck'
                 synopsysIO(connectors: [
-                    blackduck(configName: 'BIZDevBD',
-                    projectName: 'vulnado',
-                    projectVersion: '1.0')]) {
+                    blackduck(configName: "${BlackDuckConfigName}",
+                    projectName: "${BlackDuckProjectName}",
+                    projectVersion: "${BlackDuckProjectVersion}")]) {
                         sh 'io --stage execution --state io_state.json'
                     }
             } else {
