@@ -88,7 +88,7 @@ def execute() {
         }
 
         stage('SAST - SpotBugs') {
-            if (isSASTEnabled && SpotBugs) {
+            if (isSASTEnabled && params.SpotBugs) {
                 echo 'Running SAST using SpotBugs'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/spotbugs/spotbugs-adapter.json --output spotbugs-adapter.json'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/spotbugs/spotbugs.sh --output spotbugs.sh'
@@ -125,7 +125,7 @@ def execute() {
         }
 
         stage('SCA - Dependency-Check') {
-            if (isSCAEnabled && DependencyCheck) {
+            if (isSCAEnabled && params.DependencyCheck) {
                 echo 'Running SCA using Dependency-Check'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/dependency-check/dependency-check-adapter.json --output dependency-check-adapter.json'
                 sh 'curl https://raw.githubusercontent.com/synopsys-sig/io-client-adapters/eslint/dependency-check/dependency-check.sh --output dependency-check.sh'
