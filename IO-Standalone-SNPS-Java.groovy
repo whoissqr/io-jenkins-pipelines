@@ -100,15 +100,12 @@ pipeline {
             when {
                 expression { isSASTPlusMEnabled }
             }
-            input {
-                message "Major code change detected, manual threat-modeling (SAST - Manual) triggerd. Proceed?"
-                ok "Approve"
-                parameters {
-                    string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')
-                }
-            }
             steps {
-                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$Comment}."
+                script {
+                    env.COMMENT = input message: 'Major code change detected, manual threat-modeling (SAST - Manual) triggerd. Proceed?',
+                            parameters: [choice(name: 'APPROVED', choices: 'Approve\Reject', description: 'Approval Comment')]
+                }
+                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: ${env.COMMENT}."
             }
         }
 
