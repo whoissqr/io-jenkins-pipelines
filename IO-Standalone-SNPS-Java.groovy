@@ -104,7 +104,7 @@ pipeline {
                 script {
                     env.COMMENT = input message: 'Manual source code review (SAST - Manual) triggered by IO. Proceed?'
                 }
-                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: ${env.COMMENT}."
+                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved"
             }
         }
 
@@ -131,7 +131,7 @@ pipeline {
                 script {
                     env.COMMENT = input message: 'Manual threat-modeling (DAST - Manual) triggered by IO. Proceed?'
                 }
-                echo "Out-of-Band Activity - DAST Plus Manual triggered & approved with comment: ${env.COMMENT}."
+                echo "Out-of-Band Activity - DAST Plus Manual triggered & approved"
             }
         }
 
