@@ -97,21 +97,19 @@ pipeline {
         }
 
         stage('SAST Plus Manual') {
-            if (isSASTPlusMEnabled == true) {
-                input {
-                    message "Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?"
-                    ok "Approve"
-                    parameters {
-                        string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')
+            script {
+                if (isSASTPlusMEnabled == true) {
+                    input {
+                        message "Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?"
+                        ok "Approve"
+                        parameters {
+                            string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')
+                        }
                     }
+                        echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$Comment}."
                 }
-                steps {
-                    echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$Comment}."
-                }
-            }
-            else {
-                steps {
-                    echo "Out-of-Band Activity - SAST Plus Manual disabled."
+                else {
+                        echo "Out-of-Band Activity - SAST Plus Manual disabled."
                 }
             }
         }
