@@ -107,7 +107,7 @@ pipeline {
                 }
                 echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$Comment}."
             }
-            else if{
+            else{
                 echo "Out-of-Band Activity - SAST Plus Manual disabled."
             }
             
