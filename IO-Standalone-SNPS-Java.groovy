@@ -128,15 +128,12 @@ pipeline {
             when {
                 expression { isDASTPlusMEnabled }
             }
-            input {
-                message "Major code change detected, manual threat-modeling (DAST - Manual) triggerd. Proceed?"
-                ok "Approve"
-                parameters {
-                    string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')
-                }
-            }
             steps {
-                echo "Out-of-Band Activity - DAST Plus Manual triggered & approved with comment: {$Comment}."
+                script {
+                    env.COMMENT = input message: 'Major code change detected, manual threat-modeling (DAST - Manual) triggerd. Proceed?',
+                            parameters: [choice(name: 'APPROVED', choices: 'Approve\nReject', description: 'Approval Comment')]
+                }
+                echo "Out-of-Band Activity - DAST Plus Manual triggered & approved with comment: ${env.COMMENT}."
             }
         }
 
