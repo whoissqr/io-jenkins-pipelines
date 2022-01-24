@@ -97,19 +97,34 @@ pipeline {
         }
 
         stage('SAST Plus Manual') {
-            when {
+            if(isSASTPlusMEnabled){
+                input {
+                    message "Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?"
+                    ok "Approve"
+                    parameters {
+                        string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')
+                    }
+                }
+                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$Comment}."
+            }
+            else if{
+                echo "Out-of-Band Activity - SAST Plus Manual disabled."
+            }
+            
+            
+            /*when {
                 expression { isSASTPlusMEnabled }
             }
             input {
-                message "Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?"
-                ok "Approve"
-                parameters {
-                    string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')
+                    message "Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?"
+                    ok "Approve"
+                    parameters {
+                        string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')
+                    }
                 }
-            }
             steps {
                 echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$Comment}."
-            }
+            }*/
         }
 
         stage('SCA - BlackDuck') {
