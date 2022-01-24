@@ -102,8 +102,7 @@ pipeline {
             }
             steps {
                 script {
-                    env.COMMENT = input message: 'Major code change detected, manual threat-modeling (SAST - Manual) triggerd. Proceed?',
-                            parameters: [choice(name: 'APPROVED', choices: 'Approve\nReject', description: 'Approval Comment')]
+                    env.COMMENT = input message: 'Major code change detected, manual threat-modeling (SAST - Manual) triggerd. Proceed?', ok "Approve"
                 }
                 echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: ${env.COMMENT}."
             }
