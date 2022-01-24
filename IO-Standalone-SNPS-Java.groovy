@@ -102,7 +102,7 @@ pipeline {
             }
             steps {
                 script {
-                    env.COMMENT = input message: 'Major code change detected, manual threat-modeling (SAST - Manual) triggerd. Proceed?'
+                    env.COMMENT = input message: 'Manual source code review (SAST - Manual) triggered by IO. Proceed?'
                 }
                 echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: ${env.COMMENT}."
             }
@@ -129,8 +129,7 @@ pipeline {
             }
             steps {
                 script {
-                    env.COMMENT = input message: 'Major code change detected, manual threat-modeling (DAST - Manual) triggerd. Proceed?',
-                            parameters: [choice(name: 'APPROVED', choices: 'Approve\nReject', description: 'Approval Comment')]
+                    env.COMMENT = input message: 'Manual threat-modeling (DAST - Manual) triggered by IO. Proceed?'
                 }
                 echo "Out-of-Band Activity - DAST Plus Manual triggered & approved with comment: ${env.COMMENT}."
             }
