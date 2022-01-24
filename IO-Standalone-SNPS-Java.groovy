@@ -146,7 +146,7 @@ pipeline {
         stage('IO - Workflow') {
             steps {
                 echo 'Execute Workflow Stage'
-                synopsysIO() {
+                synopsysIO(connectors: [msteams(configName: 'io-bot'), buildBreaker(configName: 'BB-Custom')]) {
                     sh 'io --stage workflow --state io_state.json'
                 }
             }
