@@ -60,12 +60,14 @@ pipeline {
                     isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
                     isDASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Dast.Enabled
                     isDASTPlusMEnabled = prescriptionJSON.Data.Prescription.Security.Activities.DastPlusM.Enabled
+                    isImageScanEnabled = prescriptionJSON.Data.Prescription.Security.Activities.ImageScan.Enabled
 
                     print("SAST Enabled: $isSASTEnabled")
                     print("SAST+Manual Enabled: $isSASTPlusMEnabled")
                     print("SCA Enabled: $isSCAEnabled")
                     print("DAST Enabled: $isDASTEnabled")
                     print("DAST+Manual Enabled: $isDASTPlusMEnabled")
+                    print("ImageScan Enabled: $isImageScanEnabled")
                 }
             }
         }
