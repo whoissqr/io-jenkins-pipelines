@@ -159,7 +159,7 @@ pipeline {
                     def workflowJSON = readJSON file: 'wf-output.json'
                     print("========================== IO WorkflowEngine Summary ============================")
                     print("Breaker Status: $workflowJSON.breaker.status")
-                    print("CodeDX Score: $workflowJSON.breaker.criteria[2].risk_score")
+                    print("CodeDX Score: $workflowJSON.breaker.criteria.risk_score")
                 }
             }
         }
