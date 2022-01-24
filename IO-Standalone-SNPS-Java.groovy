@@ -97,7 +97,7 @@ pipeline {
         }
 
         stage('SAST Plus Manual') {
-            if (isSASTPlusMEnabled) {
+            if (isSASTPlusMEnabled == true) {
                 input {
                     message "Major code change detected, manual code review (SAST - Manual) triggerd. Proceed?"
                     ok "Approve"
