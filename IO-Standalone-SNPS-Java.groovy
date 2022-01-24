@@ -151,6 +151,9 @@ pipeline {
                     buildBreaker(configName: 'BB-Custom')
                 ]) {
                     sh 'io --stage workflow --state io_state.json'
+                    sh 'echo "========================== IO WorkflowEngine Summary ============================"' 
+                    sh 'echo "Breaker Status - $(jq -r '.breaker.status' wf-output.json)"'
+                    sh 'echo "CodeDX Score - $(jq -r '.breaker.criteria[2].risk_score' wf-output.json)"'
                 }
             }
         }
