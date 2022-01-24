@@ -105,10 +105,14 @@ pipeline {
                         string(name: 'Comment', defaultValue: 'Approved', description: 'Approval Comment.')
                     }
                 }
-                echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$Comment}."
+                steps {
+                    echo "Out-of-Band Activity - SAST Plus Manual triggered & approved with comment: {$Comment}."
+                }
             }
             else {
-                echo "Out-of-Band Activity - SAST Plus Manual disabled."
+                steps {
+                    echo "Out-of-Band Activity - SAST Plus Manual disabled."
+                }
             }
         }
 
