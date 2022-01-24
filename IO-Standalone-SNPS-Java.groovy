@@ -34,7 +34,13 @@ pipeline {
                         configName: 'github-devsecops',
                         owner: 'devsecops-test',
                         repositoryName: 'vulnado'),
-                    buildBreaker(configName: 'BB-ALL')]) {
+                    jira(
+                        assignee: 'rahulgu@synopsys.com', 
+                        configName: 'SIG-JIRA-Demo', 
+                        issueQuery: 'resolution=Unresolved', 
+                        projectKey: 'VUL', 
+                        projectName: 'VUL'),
+                    buildBreaker(configName: 'BB-Custom')]) {
                         sh 'io --stage io'
                     }
 
@@ -138,7 +144,12 @@ pipeline {
         stage('IO - Workflow') {
             steps {
                 echo 'Execute Workflow Stage'
-                synopsysIO(connectors: [codeDx(configName: 'SIG-CodeDx', projectId: '3'), jira(assignee: 'rahulgu@synopsys.com', configName: 'SIG-JIRA-Demo', issueQuery: 'resolution=Unresolved AND labels in (Security, Defect)', projectKey: 'VUL', projectName: 'VUL'), msteams(configName: 'io-bot'), buildBreaker(configName: 'BB-Custom')]) {
+                synopsysIO(connectors: [
+                    codeDx(configName: 'SIG-CodeDx', projectId: '3'), 
+                    jira(assignee: 'rahulgu@synopsys.com', configName: 'SIG-JIRA-Demo', issueQuery: 'resolution=Unresolved AND labels in (Security, Defect)', projectKey: 'VUL', projectName: 'VUL'), 
+                    msteams(configName: 'io-bot'), 
+                    buildBreaker(configName: 'BB-Custom')
+                ]) {
                     sh 'io --stage workflow --state io_state.json'
                 }
             }
