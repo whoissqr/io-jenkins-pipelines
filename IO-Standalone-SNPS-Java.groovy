@@ -159,15 +159,19 @@ pipeline {
                     def workflowJSON = readJSON file: 'wf-output.json'
                     print("========================== IO WorkflowEngine Summary ============================")
                     print("Breaker Status: $workflowJSON.breaker.status")
-                    print("CodeDX Score: $workflowJSON.breaker.criteria.risk_score")
-                    codedx_value = workflowJSON.breaker.criteria.risk_score
-                    if(codedx_value != "null")
-                    {   
-                        print("CodeDX Score: $codedx_value")
+                    
+                    print("check $workflowJSON.summary.risk_score")
+                    codedx_value = workflowJSON.summary.risk_score
+                    
+                    for(arr in codedx_value){
+                        if(arr != "null")
+                        {   
+                            print("CodeDX Score1: $codedx_value")
+                        }
                     }
                     if(workflowJSON.summary.activity == "codedx")
                     {
-                        print("CodeDX Score: $workflowJSON.summary.risk_score")
+                        print("CodeDX Score2: $workflowJSON.summary.risk_score")
                     }
                 }
             }
