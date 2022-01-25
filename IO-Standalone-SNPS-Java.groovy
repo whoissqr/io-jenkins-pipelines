@@ -81,7 +81,6 @@ pipeline {
             }
             steps {
                 echo 'Running SAST using Sigma - Rapid Scan'
-                echo env.OSTYPE
                 synopsysIO(connectors: [
                     rapidScan(configName: 'Sigma')]) {
                     sh 'io --stage execution --state io_state.json'
@@ -162,7 +161,7 @@ pipeline {
 
                     codedx_value = workflowJSON.summary.risk_score
                     for(arr in codedx_value){
-                        if(arr != "null")
+                        if(arr != null)
                         {   
                             print("CodeDX Score: $arr")
                         }
