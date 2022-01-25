@@ -109,7 +109,7 @@ pipeline {
             }
             steps {
                 script {
-                    env.COMMENT = input message: 'Manual source code review (SAST - Manual) triggered by IO. Proceed?'
+                    input message: 'Manual source code review (SAST - Manual) triggered by IO. Proceed?'
                 }
                 echo "Out-of-Band Activity - SAST Plus Manual triggered & approved"
             }
@@ -136,7 +136,7 @@ pipeline {
             }
             steps {
                 script {
-                    env.COMMENT = input message: 'Manual threat-modeling (DAST - Manual) triggered by IO. Proceed?'
+                    input message: 'Manual threat-modeling (DAST - Manual) triggered by IO. Proceed?'
                 }
                 echo "Out-of-Band Activity - DAST Plus Manual triggered & approved"
             }
@@ -167,6 +167,30 @@ pipeline {
                         }
                     }
                 }
+            }
+        }
+        
+        stage('Security Sign Off') {
+            steps {
+                script {
+                    
+                    //parse '.io/jenkins-plugin/io-manifest.yml'
+                    
+                    def workflowJSON = readJSON file: 'wf-output.json'
+                 
+                    codedx_value = workflowJSON.summary.risk_score
+                    for(arr in codedx_value){
+                        if(arr != null)
+                        {   
+                            if(arr <= 80)
+                            {
+                                print("CodeDX Score: $arr")
+                                input message: 'Security Sign Off. Proceed?'
+                            }
+                        }
+                    }
+                }
+                echo "Security Sign Off triggered & approved"
             }
         }
     }
