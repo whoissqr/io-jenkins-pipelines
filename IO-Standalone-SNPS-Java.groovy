@@ -161,7 +161,7 @@ pipeline {
                     print("Breaker Status: $workflowJSON.breaker.status")
                     print("CodeDX Score: $workflowJSON.breaker.criteria.risk_score")
                     codedx_value = workflowJSON.breaker.criteria.risk_score
-                    if(codedx_value =! "null")
+                    if(codedx_value != "null")
                     {   
                         print("CodeDX Score: $codedx_value")
                     }
