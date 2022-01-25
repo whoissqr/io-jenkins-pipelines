@@ -160,7 +160,12 @@ pipeline {
                     print("========================== IO WorkflowEngine Summary ============================")
                     print("Breaker Status: $workflowJSON.breaker.status")
                     print("CodeDX Score: $workflowJSON.breaker.criteria.risk_score")
-                    if($workflowJSON.summary.activity == "codedx")
+                    codedx_value = workflowJSON.breaker.criteria.risk_score
+                    if(codedx_value =! null)
+                    {   
+                        print("CodeDX Score: $codedx_value")
+                    }
+                    if(workflowJSON.summary.activity == "codedx")
                     {
                         print("CodeDX Score: $workflowJSON.summary.risk_score")
                     }
