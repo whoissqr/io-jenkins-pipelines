@@ -182,9 +182,9 @@ pipeline {
                     for(arr in codedx_value){
                         if(arr != null)
                         {   
+                            print("Code Dx Score: $arr")
                             if(arr < 80)
                             {
-                                print("Code Dx Score: $arr")
                                 input message: 'Code Dx Score did not meet the defined threshold. Do you wish to proceed?'
                             }
                         }
