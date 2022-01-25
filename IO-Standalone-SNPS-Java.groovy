@@ -170,7 +170,7 @@ pipeline {
             }
         }
         
-        stage('Security Sign Off') {
+        stage('Security Sign-Off') {
             steps {
                 script {
                     
@@ -185,12 +185,12 @@ pipeline {
                             if(arr <= 80)
                             {
                                 print("CodeDX Score: $arr")
-                                input message: 'Security Sign Off. Proceed?'
+                                input message: 'CodeDX Score did not meet the defined threshold. Do you wish to proceed?'
                             }
                         }
                     }
                 }
-                echo "Security Sign Off triggered & approved"
+                echo "Security Sign-Off triggered & approved"
             }
         }
     }
