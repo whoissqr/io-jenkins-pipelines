@@ -105,7 +105,7 @@ def execute() {
         }
 
         stage('SCA - BlackDuck') {
-            //if (isSCAEnabled) {
+            if (isSCAEnabled) {
                 echo 'Running SCA using BlackDuck'
                 synopsysIO(connectors: [
                     blackduck(configName: "${BlackDuckConfigName}",
@@ -113,7 +113,7 @@ def execute() {
                     projectVersion: "${BlackDuckProjectVersion}")]) {
                         sh 'io --stage execution --state io_state.json'
                     }
-            //}
+            }
         }
 
         stage('SCA - Dependency-Check') {
@@ -150,7 +150,6 @@ def execute() {
             archiveArtifacts artifacts: 'mvn-install.log', allowEmptyArchive: 'true'
             archiveArtifacts artifacts: 'spotbugs-report.html', allowEmptyArchive: 'true'
             archiveArtifacts artifacts: 'dependency-check-report.html', allowEmptyArchive: 'true'
-            archiveArtifacts artifacts: 'io_state.json', allowEmptyArchive: 'true'
 
             // Remove the state json file as it has sensitive information
             sh 'rm io_state.json'
