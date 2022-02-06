@@ -105,7 +105,7 @@ def execute() {
         }
 
         stage('SCA - BlackDuck') {
-            if (isSCAEnabled) {
+            //if (isSCAEnabled) {
                 echo 'Running SCA using BlackDuck'
                 synopsysIO(connectors: [
                     blackduck(configName: "${BlackDuckConfigName}",
@@ -113,7 +113,7 @@ def execute() {
                     projectVersion: "${BlackDuckProjectVersion}")]) {
                         sh 'io --stage execution --state io_state.json'
                     }
-            }
+            //}
         }
 
         stage('SCA - Dependency-Check') {
