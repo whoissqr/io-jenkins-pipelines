@@ -43,7 +43,8 @@ pipeline {
                             Persona.Type='devsecops' \
                             Workflow.Engine.Version='2021.12.2' \
                             Io.Server.Token=$IOToken \
-                            Io.Server.Url='http://23.99.131.170'"
+                            Io.Server.Url='http://23.99.131.170' \
+                            Io.Manifest.FilePath=io-manifest.yml"
                     }
 
                 script {
