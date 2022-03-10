@@ -4,20 +4,22 @@ def isSCAEnabled
 def isDASTEnabled
 def isDASTPlusMEnabled
 def buildBreakerStatus
+def codePatch
 
 pipeline {
     agent any
     tools {
         maven 'Maven3'
     }
-    environment {
-        SYNOPSYS_IO_Scm_CodePatch = sh(script: 'git diff HEAD^ HEAD', , returnStdout: true)
-    }
 
     stages {
         stage('Checkout Source Code') {
             steps {
                 git branch: 'master', url: 'https://bitbucket.org/1nv1n/spring-boot-demo'
+
+                script {
+                    codePatch = sh(script: 'git diff HEAD^ HEAD', , returnStdout: true)
+                }
             }
         }
 
@@ -28,6 +30,9 @@ pipeline {
         }
 
         stage('IO - Prescription') {
+            environment {
+                SYNOPSYS_IO_Scm_CodePatch = "${codePatch}"
+            }
             steps {
                 synopsysIO() {
                         sh 'io --version'
@@ -36,6 +41,7 @@ pipeline {
                             Project.Name='bb-spring-sample' \
                             Project.Application.Name='spring-boot-demo' \
                             Persona.Type='devsecops' \
+                            Workflow.Engine.Version='2021.12.2' \
                             Io.Server.Token=$IOToken \
                             Io.Server.Url='http://23.99.131.170'"
                     }
@@ -64,6 +70,8 @@ pipeline {
                     print("DAST Enabled: $isDASTEnabled")
                     print("DAST+Manual Enabled: $isDASTPlusMEnabled")
                     print("ImageScan Enabled: $isImageScanEnabled")
+
+                    echo "Prescription obtained from code-patch:  ${env.SYNOPSYS_IO_Scm_CodePatch}"
                 }
             }
         }
@@ -126,19 +134,31 @@ pipeline {
 
                 script {
                     def workflowJSON = readJSON file: 'wf-output.json'
-                    print("========================== IO WorkflowEngine Summary ============================")
-                    print("Breaker Status: $workflowJSON.breaker.status")
-
                     buildBreakerStatus = workflowJSON.breaker.status
-                    workflowJSON.breaker.criteria.each{activity->
-                        print("Activity: ${activity.activityname}")
-                        if(activity.has("overall")) {
-                            overallCount = activity.overall.size()
-                            print("Build Breaker Issue Count: $overallCount")
-                        } else if(activity.has("risk_score")) {
-                            print("CodeDx Risk Score: ${activity.risk_score}")
+
+                    print("========================== IO WorkflowEngine Summary ============================")
+                    print("Build Breaker Status: $buildBreakerStatus")
+
+                    if(workflowJSON.summary.size() > 0) {
+                        workflowJSON.summary.each{ activity->
+                            print("Activity: ${activity.activity}")
+                            if(activity.has("breakercount")) {
+                                breakerCount = activity.breakercount.size()
+                                print("Build Breaker Count: $breakerCount")
+                                if (breakerCount > 0) {
+                                    activity.breakercount.each{ breaker ->
+                                        print("Severity: ${breaker.severity}")
+                                        print("Count: ${breaker.count}")
+                                    }
+                                }
+                            } else if(activity.has("risk_score")) {
+                                print("CodeDx Risk Score: ${activity.risk_score}")
+                            }
                         }
+                    } else {
+                        print("No workflow summary available.")
                     }
+                    print("========================== IO WorkflowEngine Summary ============================")
                 }
             }
         }
@@ -150,7 +170,7 @@ pipeline {
                         input message: 'One or more conditions triggered Build Breaker. Do you wish to proceed?'
                     }
                 }
-                echo "Security Sign-Off triggered & approved"
+                echo "Security Sign-Off Check Complete (Approved or Not Applicable)"
             }
         }
     }
