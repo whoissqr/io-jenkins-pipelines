@@ -47,27 +47,13 @@ pipeline {
                 script {
                     def prescriptionJSON = readJSON file: 'io_state.json'
 
-                    print("Business Criticality Score: $prescriptionJSON.Data.Prescription.RiskScore.BusinessCriticalityScore")
-                    print("Data Class Score: $prescriptionJSON.Data.Prescription.RiskScore.DataClassScore")
-                    print("Access Score: $prescriptionJSON.Data.Prescription.RiskScore.AccessScore")
-                    print("Open Vulnerability Score: $prescriptionJSON.Data.Prescription.RiskScore.OpenVulnerabilityScore")
-                    print("Change Significance Score: $prescriptionJSON.Data.Prescription.RiskScore.ChangeSignificanceScore")
-                    print("Tooling Score: $prescriptionJSON.Data.Prescription.RiskScore.ToolingScore")
-                    print("Training Score: $prescriptionJSON.Data.Prescription.RiskScore.TrainingScore")
+                    isSASTEnabled = prescriptionJSON.data.prescription.security.activities.sast.enabled
+                    isSASTPlusMEnabled = prescriptionJSON.data.prescription.security.activities.sastPlusM.enabled
+                    isSCAEnabled = prescriptionJSON.data.prescription.security.activities.sca.enabled
+                    isDASTEnabled = prescriptionJSON.data.prescription.security.activities.dast.enabled
+                    isDASTPlusMEnabled = prescriptionJSON.data.prescription.security.activities.dastPlusM.enabled
+                    isImageScanEnabled = prescriptionJSON.data.prescription.security.activities.imageScan.enabled
 
-                    isSASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sast.Enabled
-                    isSASTPlusMEnabled = prescriptionJSON.Data.Prescription.Security.Activities.SastPlusM.Enabled
-                    isSCAEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Sca.Enabled
-                    isDASTEnabled = prescriptionJSON.Data.Prescription.Security.Activities.Dast.Enabled
-                    isDASTPlusMEnabled = prescriptionJSON.Data.Prescription.Security.Activities.DastPlusM.Enabled
-                    isImageScanEnabled = prescriptionJSON.Data.Prescription.Security.Activities.ImageScan.Enabled
-
-                    print("SAST Enabled: $isSASTEnabled")
-                    print("SAST+Manual Enabled: $isSASTPlusMEnabled")
-                    print("SCA Enabled: $isSCAEnabled")
-                    print("DAST Enabled: $isDASTEnabled")
-                    print("DAST+Manual Enabled: $isDASTPlusMEnabled")
-                    print("ImageScan Enabled: $isImageScanEnabled")
                 }
             }
         }
