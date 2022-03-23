@@ -30,7 +30,7 @@ pipeline {
                         projectName: 'devsecops-vulnado',
                         workflowVersion: '2021.12.2'),
                     github(
-                        branch: 'devsecops',
+                        branch: 'master',
                         configName: 'github-devsecops',
                         owner: 'devsecops-test',
                         repositoryName: 'vulnado'),
