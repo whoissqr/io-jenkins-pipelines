@@ -26,7 +26,7 @@ pipeline {
             steps {
                 synopsysIO(connectors: [
                     io(
-                        configName: 'io-azure',
+                        configName: 'mac-io-compose',
                         projectName: 'devsecops-vulnado',
                         workflowVersion: '2021.12.2'),
                     github(
