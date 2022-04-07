@@ -133,7 +133,7 @@ pipeline {
                 echo 'Execute Workflow Stage'
                 synopsysIO(connectors: [
                     codeDx(configName: 'SIG-CodeDx', projectId: '111'), 
-                    jira(assignee: 'rahulgu@synopsys.com', configName: 'SIG-JIRA-Demo', issueQuery: 'resolution=Unresolved AND labels in (Security, Defect)', projectKey: 'VUL', projectName: 'VUL'), 
+                    // jira(assignee: 'rahulgu@synopsys.com', configName: 'SIG-JIRA-Demo', issueQuery: 'resolution=Unresolved AND labels in (Security, Defect)', projectKey: 'VUL', projectName: 'VUL'), 
                     msteams(configName: 'io-bot'), 
                     buildBreaker(configName: 'BB-Custom')
                 ]) {
