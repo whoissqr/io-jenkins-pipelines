@@ -27,7 +27,7 @@ pipeline {
                 synopsysIO(connectors: [
                     io(
                         configName: 'mac-io-compose',
-                        projectName: 'devsecops-vulnado',
+                        projectName: 'devsecops-vul',
                         workflowVersion: '2021.12.2'),
                     github(
                         branch: 'master',
