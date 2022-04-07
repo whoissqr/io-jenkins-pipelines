@@ -34,12 +34,12 @@ pipeline {
                         configName: 'github-devsecops',
                         owner: 'devsecops-test',
                         repositoryName: 'vulnado'),
-                    jira(
+                    /* jira(
                         assignee: 'rahulgu@synopsys.com', 
                         configName: 'SIG-JIRA-Demo', 
                         issueQuery: 'resolution=Unresolved', 
                         projectKey: 'VUL', 
-                        projectName: 'VUL'),
+                        projectName: 'VUL'), */
                     buildBreaker(configName: 'BB-Custom')]) {
                         sh 'io --stage io Persona.Type=developer Project.Release.Type=minor'
                     }
