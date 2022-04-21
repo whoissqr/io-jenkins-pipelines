@@ -41,6 +41,7 @@ pipeline {
                         projectKey: 'VUL', 
                         projectName: 'VUL'), */
                     buildBreaker(configName: 'BB-Custom')]) {
+                        sh 'which io'
                         sh 'io --stage io Persona.Type=developer Project.Release.Type=major'
                     }
 
