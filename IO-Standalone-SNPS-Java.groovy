@@ -188,7 +188,7 @@ pipeline {
             archiveArtifacts artifacts: '**/*-results*.json', allowEmptyArchive: 'true'
 
             // Remove the state json file as it has sensitive information
-            sh 'rm io_state.json'
+            // sh 'rm io_state.json'
         }
     }
 }
